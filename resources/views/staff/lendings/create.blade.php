@@ -57,11 +57,35 @@
                         <input type="datetime-local" name="date_lending" class="form-control"
                             value="{{ now()->format('Y-m-d\TH:i') }}" required>
                     </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Tanda Tangan Peminjam</label>
+                        <div class="kbw-signature">
+                            <canvas id="sig-canvas"></canvas>
+                        </div>
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-sm btn-secondary" id="sig-clearBtn">Clear
+                                Signature</button>
+                        </div>
+                        <textarea id="signature64" name="signature" style="display: none"></textarea>
+                    </div>
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary px-4"
                             style="background-color: #6f42c1; border:none;">Submit</button>
                         <a href="{{ route('lendings.index') }}" class="btn btn-light px-4 border">Cancel</a>
                     </div>
+                    <style>
+                        .kbw-signature {
+                            width: 400px;
+                            height: 200px;
+                            border: 1px solid #ccc;
+                            background-color: #f9f9f9;
+                        }
+
+                        #sig-canvas {
+                            width: 100%;
+                            height: 100%;
+                        }
+                    </style>
                 </form>
             </div>
         </div>
@@ -85,3 +109,33 @@
         });
     </script>
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var canvas = document.getElementById('sig-canvas');
+        var signaturePad = new SignaturePad(canvas);
+
+        // Fungsi tombol clear
+        $('#sig-clearBtn').click(function(e) {
+            e.preventDefault();
+            signaturePad.clear();
+            $("#signature64").val(''); // Kosongkan input hidden
+        });
+
+        // Sebelum form submit, ambil data gambar dari canvas
+        $('form').submit(function() {
+            if (!signaturePad.isEmpty()) {
+                // Ambil data gambar base64
+                var sigData = signaturePad.toDataURL('image/png');
+                $("#signature64").val(sigData);
+            } else {
+                alert("Harap berikan tanda tangan peminjam.");
+                return false; // Batalkan submit jika kosong
+            }
+        });
+    });
+</script>

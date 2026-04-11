@@ -25,6 +25,7 @@ return new class extends Migration
         $table->foreignId('category_id')->constrained()->onDelete('cascade');
         $table->string('name');
         $table->integer('stock');
+        $table->integer('available')->default(0);
         $table->timestamps();
     });
 
@@ -38,6 +39,12 @@ return new class extends Migration
         $table->dateTime('date_lending');
         $table->boolean('is_returned')->default(false);
         $table->text('notes')->nullable();
+        // Kolom untuk fitur Tambahan
+        $table->longText('signature')->nullable(); // Untuk tanda tangan digital
+        $table->integer('qty_broken')->default(0);
+        $table->decimal('penalty_amount', 12, 2)->default(0);
+        $table->boolean('is_penalty_paid')->default(true);
+        $table->string('condition')->nullable();
         $table->timestamps();
     });
 }

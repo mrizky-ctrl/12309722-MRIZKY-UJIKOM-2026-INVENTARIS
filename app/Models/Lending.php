@@ -13,7 +13,12 @@ class Lending extends Model
         'qty',
         'date_lending',
         'is_returned',
-        'notes'
+        'condition',
+        'qty_broken',
+        'penalty_amount',
+        'is_penalty_paid',
+        'notes',
+        'signature',
     ];
     public function item()
     {
